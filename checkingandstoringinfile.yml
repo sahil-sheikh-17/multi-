@@ -1,0 +1,27 @@
+--- # installing nginx
+- hosts: new
+  user: ubuntu
+  become: yes
+  connection: ssh
+  tasks:
+   - name: create file
+     file:
+        dest: /home/ubuntu/abc.txt
+        state: touch
+     delegate_to: localhost
+
+
+   - name: running comand
+     shell: lsblk
+     register: op
+   - debug:
+        var: op.stdout_lines  
+
+
+     
+   - name: append
+     lineinfile:
+        dest: /home/ubuntu/abc.txt
+        line: "{{ op.stdout_lines }}"
+        insertafter: EOF
+     delegate_to: localhost
